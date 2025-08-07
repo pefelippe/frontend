@@ -15,10 +15,6 @@ export const fetchRecentlyPlayed = async (accessToken: string, limit = 20) => {
 
     return response.data;
   } catch (error: any) {
-    console.error('❌ Erro ao buscar recently played:', {
-      status: error.response?.status,
-      message: error.response?.data?.error?.message || error.message,
-    });
     throw error;
   }
 };

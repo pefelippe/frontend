@@ -47,25 +47,23 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         volume: 0.5,
       });
 
-      // Error handling
       spotifyPlayer.addListener('initialization_error', ({ message }) => {
-        console.error('❌ Falha ao inicializar player:', message);
+        console.error(' Falha ao inicializar player:', message);
       });
 
       spotifyPlayer.addListener('authentication_error', ({ message }) => {
-        console.error('❌ Falha na autenticação:', message);
+        console.error(' Falha na autenticação:', message);
       });
 
       spotifyPlayer.addListener('account_error', ({ message }) => {
-        console.error('❌ Falha ao validar conta Spotify (precisa ser Premium):', message);
+        console.error('Falha ao validar conta Spotify (precisa ser Premium):', message);
         setIsPremiumRequired(true);
       });
 
       spotifyPlayer.addListener('playback_error', ({ message }) => {
-        console.error('❌ Erro de reprodução:', message);
+        console.error('Erro de reprodução:', message);
       });
 
-      // Playback status updates
       spotifyPlayer.addListener('player_state_changed', (state) => {
         if (!state) {
           return;
@@ -77,27 +75,23 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         setDuration(state.track_window.current_track.duration_ms);
       });
 
-      // Ready
       spotifyPlayer.addListener('ready', ({ device_id }) => {
         setDeviceId(device_id);
         setIsReady(true);
       });
 
-      // Not Ready
-      spotifyPlayer.addListener('not_ready', ({ device_id }) => {
+      spotifyPlayer.addListener('not_ready', () => {
         setIsReady(false);
       });
 
-      // Connect to the player!
       spotifyPlayer.connect().then(success => {
         if (!success) {
-          console.error('❌ Falha ao conectar ao Spotify Web Playback SDK');
+          console.error('Falha ao conectar ao Spotify Web Playback SDK');
         }
       });
       setPlayer(spotifyPlayer);
     };
 
-    // Wait for SDK to load
     if (window.Spotify) {
       initializePlayer();
     } else {
@@ -119,19 +113,14 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     let body: any;
 
     if (contextUri) {
-      // Check if the context is an artist - artists don't support offset
       if (contextUri.startsWith('spotify:artist:')) {
-        // For artist context, we can't use offset, so just play from the artist
         body = { context_uri: contextUri };
       } else if (!uri || uri.trim() === '') {
-        // If URI is empty or not provided, play the entire context from the beginning
         body = { context_uri: contextUri };
       } else {
-        // For other contexts (album, playlist) with specific track, use offset
         body = { context_uri: contextUri, offset: { uri } };
       }
     } else {
-      // No context, just play the single track
       body = { uris: [uri] };
     }
 
@@ -148,13 +137,6 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       });
 
       if (!response.ok) {
-        const errorData = await response.text();
-        console.error('❌ Erro na resposta da API:', {
-          status: response.status,
-          statusText: response.statusText,
-          error: errorData,
-        });
-
         if (response.status === 403) {
           console.error('❌ Erro 403: Você precisa ter Spotify Premium para usar o Web Playback SDK');
           setIsPremiumRequired(true);
@@ -163,7 +145,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
 
       }
     } catch (error) {
-      console.error('❌ Erro ao tocar música:', error);
+      console.error('Erro ao tocar música:', error);
     }
   };
 

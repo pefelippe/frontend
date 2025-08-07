@@ -14,11 +14,6 @@ export const fetchLikedSongs = async (accessToken: string, limit = 20, offset = 
 
     return response.data;
   } catch (error: any) {
-    console.error('❌ Erro ao buscar músicas curtidas:', {
-      status: error.response?.status,
-      message: error.response?.data?.error?.message || error.message,
-      scopes: error.response?.data?.error?.message?.includes('scope') ? 'Escopo insuficiente' : 'Outro erro',
-    });
     throw error;
   }
 };
@@ -37,11 +32,6 @@ export const addToLikedSongs = async (accessToken: string, trackIds: string[]) =
 
     return response.data;
   } catch (error: any) {
-    console.error('❌ Erro ao adicionar músicas aos favoritos:', {
-      status: error.response?.status,
-      message: error.response?.data?.error?.message || error.message,
-      trackIds,
-    });
     throw error;
   }
 };
@@ -60,11 +50,6 @@ export const removeFromLikedSongs = async (accessToken: string, trackIds: string
 
     return response.data;
   } catch (error: any) {
-    console.error('❌ Erro ao remover músicas dos favoritos:', {
-      status: error.response?.status,
-      message: error.response?.data?.error?.message || error.message,
-      trackIds,
-    });
     throw error;
   }
 };
